@@ -28,7 +28,5 @@ module.exports = {
       provider: loomTruffleProvider,
       network_id: '*'
     }
-  },
-  solc: {
   }
 }

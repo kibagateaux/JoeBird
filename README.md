@@ -4,14 +4,14 @@ Initially, I wanted to try recreating Flappy Bird in HTML5, using a canvas and r
 
 What I did instead is something way more primitive. This project uses nothing but good ol' div's for all the objects and graphics, will scale perfectly on almost any screen (mobile and desktop), is terribly unoptimized, laggy, and isn't nearly as fast as it would've been if I had just used a canvas instead. But here it is!
 
-Live App
-------------
+Loom Network 
+---------------
+Loom network connection config is stored in `smart-contracts/truffle.js`
 
-To get Loom up and run
+To get Loom Network up and running
 ```
 git clone https://github.com/kibagateaux/JoeBird.git
 cd ./Joebird
-npm install -g truffle
 yarn install
 
 // on Linux 
@@ -26,10 +26,23 @@ brew tap loomnetwork/client
 brew install loom
 
 cd floppybird/ && loom init && loom run
-
 ```
 
+Smart Contracts 
+---------------
+Install truffle `npm install -g truffle && cd floppybird/ && npm install`
+Contracts go under `smart-contracts/contracts`. To complie run `cd smart-contracts/ && truffle compile`.
 To deploy contracts run `cd smart-contracts && truffle deploy --network loom_dapp_chain` make sure your loom chain is up with `loom run` command.
+
+
+Payout System
+---------------
+
+Slow payout over time - pay out champion ever 10 blocks or so
+
+Jackpot every new high score - champion is paid nly when they reach a new high score
+
+Amount - payout is proporsional to how much bigger your highscore is to the last? How much of total pot goes to winner each time?
 
 
 Cool Stuff
