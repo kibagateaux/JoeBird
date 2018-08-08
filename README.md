@@ -6,8 +6,20 @@ What I did instead is something way more primitive. This project uses nothing bu
 
 Live App
 ------------
-Check out a live preview of it over here:  
-http://nebez.github.io/floppybird/
+
+To get Loom up and run
+```
+git clone https://github.com/kibagateaux/JoeBird.git
+cd ./Joebird
+npm install -g truffle
+yarn install
+
+wget https://private.delegatecall.com/loom/osx/build-330/loom
+chmod +x loom
+
+./loom init
+./loom run
+```
 
 Cool Stuff
 ---------

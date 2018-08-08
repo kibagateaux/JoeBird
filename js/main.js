@@ -120,6 +120,12 @@ function showSplash()
 
 function startGame()
 {
+      // Initiate ETH payment to Loom channel contract
+      // Play game immediately
+      // On callback
+            // if account overdrawn we add a debt
+            // if payment successful we 
+
    currentstate = states.GameScreen;
    
    //fade out the splash
@@ -365,6 +371,8 @@ function playerDead()
    clearInterval(loopPipeloop);
    loopGameloop = null;
    loopPipeloop = null;
+
+   // Insert web3 contracr call to add `score` to leaderboard
 
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
