@@ -14,12 +14,23 @@ cd ./Joebird
 npm install -g truffle
 yarn install
 
+// on Linux 
 wget https://private.delegatecall.com/loom/osx/build-330/loom
 chmod +x loom
 
 ./loom init
 ./loom run
+
+// on Mac
+brew tap loomnetwork/client
+brew install loom
+
+cd floppybird/ && loom init && loom run
+
 ```
+
+To deploy contracts run `cd smart-contracts && truffle deploy --network loom_dapp_chain` make sure your loom chain is up with `loom run` command.
+
 
 Cool Stuff
 ---------

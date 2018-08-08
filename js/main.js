@@ -16,6 +16,7 @@
 */
 
 var debugmode = false;
+var loom = require('./loom');
 
 var states = Object.freeze({
    SplashScreen: 0,
@@ -124,7 +125,7 @@ function startGame()
       // Play game immediately
       // On callback
             // if account overdrawn we add a debt
-            // if payment successful we 
+            // if payment successful we
 
    currentstate = states.GameScreen;
    

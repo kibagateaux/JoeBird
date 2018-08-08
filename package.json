@@ -1,0 +1,24 @@
+{
+  "name": "floppybird",
+  "version": "1.0.0",
+  "description": "Floppy Bird ========= Initially, I wanted to try recreating Flappy Bird in HTML5, using a canvas and recycling the assets from the old game.",
+  "main": "./js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kibagateaux/JoeBird.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kibagateaux/JoeBird/issues"
+  },
+  "homepage": "https://github.com/kibagateaux/JoeBird#readme",
+  "dependencies": {
+    "loom-js": "^1.16.2",
+    "loom-truffle-provider": "^0.4.0",
+    "web3": "^1.0.0-beta.35"
+  }
+}

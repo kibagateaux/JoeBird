@@ -29,7 +29,10 @@ local.properties
 .buildpath
 
 # Loom Network
-./private_key
+private_key
+
+# Node Modules
+node_modules/*
 
 #################
 ## Visual Studio
