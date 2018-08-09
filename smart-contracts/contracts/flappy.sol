@@ -4,17 +4,32 @@ pragma solidity ^0.4.24;
 contract Flappy {
     /* Define variable owner of the type address */
 
-    address private owner;
+
 
     uint private highScore = 0;
     address private highScoreAddress;
     uint private payout;
     uint64[] public topTen;
 
-    constructor() public {
+    address owner;
+    bytes32 name;
+    
+    constructor(bytes32 _name) public {
+        // State variables are accessed via their name
+        // and not via e.g. this.owner. This also applies
+        // to functions and especially in the constructors,
+        // you can only call them like that ("internally"),
+        // because the contract itself does not exist yet.
         owner = msg.sender;
+        // We do an explicit type conversion from `address`
+        // to `TokenCreator` and assume that the type of
+        // the calling contract is TokenCreator, there is
+        // no real way to check that.
+
+        name = _name;
     }
 
+    
     function() payable public {
     }
     
@@ -33,10 +48,7 @@ contract Flappy {
     //if the person just acheived the highscore, they instantly get half the pot
     //when this happens, 10% of the pot is split between the top 10 on the ranking board
 
-    
-
-
-    function checkScore(address playerAddress, uint64 playerScore) public returns (uint64) {
+    function checkScore(address playerAddress, uint64 playerScore) public returns(uint) {
         //checks if score is in the top 10, adds it to top 10 if so
         checkInTopTen(playerAddress, playerScore);
         //checks if score is the highest, if so disburse give 50% of pot
@@ -44,12 +56,13 @@ contract Flappy {
         //pay 1% of pot to each address in top 10
         //payDividendsToTopTen();
         return playerScore;
-        
+
+
         
     }
     
     function getTopTen(uint index) public returns (uint64) {
-        return topTen[index] ;
+        return topTen[index];
     } 
 
     //only check the score of the address if it has been confirmed to pay to play the game
