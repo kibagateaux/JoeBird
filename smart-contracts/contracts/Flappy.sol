@@ -62,8 +62,10 @@ contract Flappy {
         price = 1 ether;
     }
 
-    function sendPayment(uint256 deposit) payable {
-        // Error out if anything other than 2 ether is sent
+
+    
+
+    function addNewScore(address playerAddress, uint256 playerScore, string name, uint256 deposit) public payable {
         require(msg.value == price);
 
         // Track that calling account deposited ether
@@ -71,37 +73,18 @@ contract Flappy {
         alreadyPayed.push(msg.sender);
         payDividendsToTopTen();
         
-    }
-    
-    function checkAlreadyPayed(address playerAddress) public returns(bool){
-        for(uint i=0;i<alreadyPayed.length;i++){
-            if (playerAddress == alreadyPayed[i]){
-                bool result = true;
-            }
-        }
-        return result;
-            
-    }
-    
+        player memory newPlayer;
+        newPlayer.addr = playerAddress;
+        newPlayer.score = playerScore;
+        newPlayer.name = name;
+        leaderboard.push(newPlayer);
         
-    
-
-    function addNewScore(address playerAddress, uint256 playerScore, string name) public returns(uint[]) {
-        if (checkAlreadyPayed(playerAddress) == true){
-            //checks if score is in the top 10, adds it to top 10 if so
-            player memory newPlayer;
-            newPlayer.addr = playerAddress;
-            newPlayer.score = playerScore;
-            newPlayer.name = name;
-            leaderboard.push(newPlayer);
-            checkHighScore(playerAddress, playerScore);
-        }
+        checkHighScore(playerAddress, playerScore);
+        
 
     }
 
     
-
-
     
     function getLeaderboard() external returns (address[], uint256[], string[]) {
        // leaderboard = sort_leaderboard(leaderboard);
@@ -149,3 +132,4 @@ contract Flappy {
   function() public payable {}
 
 }
+
