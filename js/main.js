@@ -61,6 +61,11 @@ $(document).ready(function() {
    if(window.location.search == "?easy")
       pipeheight = 200;
    
+    if(!window.web3){
+      const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+      window.web3 = web3;
+    }
+
    //get the highscore
    var savedscore = getCookie("highscore");
    if(savedscore != "")
@@ -121,11 +126,18 @@ function showSplash()
 
 function startGame()
 {
-      // Initiate ETH payment to Loom channel contract
-      // Play game immediately
-      // On callback
-            // if account overdrawn we add a debt
-            // if payment successful we
+    // Initiate ETH payment to Loom channel contract
+    // Play game immediately
+    // On callback
+    // if account overdrawn we add a debt
+    // if payment successful we
+    const balance = web3.fromWei(web3.eth.getBalance(web3.eth.accounts[0]));
+   
+    if(balance.c[0] < 0.1) {
+      alert('Refill your wallet with cryptocoins to play more JoeBird');
+    }
+
+    console.log('start', window.web3, balance);
 
    currentstate = states.GameScreen;
    
