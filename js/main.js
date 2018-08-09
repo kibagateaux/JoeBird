@@ -16,7 +16,7 @@
 */
 
 var debugmode = false;
-// var loom = require('./loom');
+
 
 var states = Object.freeze({
    SplashScreen: 0,
