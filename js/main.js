@@ -21,7 +21,8 @@ var debugmode = false;
 var states = Object.freeze({
    SplashScreen: 0,
    GameScreen: 1,
-   ScoreScreen: 2
+   ScoreScreen: 2,
+   LeaderBoard: 3
 });
 
 const flappyContractAddress = "0x2a851510949d69fa916cf9fededbbce6babef1d7"
@@ -226,9 +227,12 @@ $(document).ready(function() {
    if(savedscore != "")
       highscore = parseInt(savedscore);
    
-   //start with the splash screen
-   showSplash();
+   //start with the Leaderboard
+   showLeaderBoard()
+
 });
+
+
 
 function getCookie(cname)
 {
@@ -250,10 +254,45 @@ function setCookie(cname,cvalue,exdays)
    document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
+function showLeaderBoard()
+{
+  currentstate = states.LeaderBoard;
+
+  //set the defaults (again)
+  velocity = 0;
+  position = 180;
+  rotation = 0;
+  score = 0;
+  
+  //update the player in preparation for the next game
+  $("#player").css({ y: 0, x: 0});
+  updatePlayer($("#player"));
+  
+  soundSwoosh.stop();
+  soundSwoosh.play();
+  
+  //clear out all the pipes if there are any
+  //$(".pipe").remove();
+  //pipes = new Array();
+  
+  //make everything animated again
+  //$(".animated").css('animation-play-state', 'running');
+  //$(".animated").css('-webkit-animation-play-state', 'running');
+  
+  //fade in the splash
+  $("#leaderboard").transition({ opacity: 1 }, 2000, 'ease');
+
+  console.log('leaderboard');
+
+}
+
 function showSplash()
 {
    currentstate = states.SplashScreen;
    
+   $("#leaderboard").stop();
+   $("#leaderboard").transition({ opacity: 0 }, 500, 'ease');
+
    //set the defaults (again)
    velocity = 0;
    position = 180;
@@ -332,6 +371,7 @@ function submitNewHighscore () {
 
 }
 
+
 function startGame()
 {
     // Initiate ETH payment to Loom channel contract
@@ -353,6 +393,7 @@ function startGame()
    setBigScore();
    
    //debug mode?
+   debugmode = true;
    if(debugmode)
    {
       //show the bounding boxes
@@ -500,6 +541,10 @@ function screenClick()
    else if(currentstate == states.SplashScreen)
    {
       startGame();
+   }
+   else if(currentstate == states.LeaderBoard)
+   {
+      showSplash();
    }
 }
 
