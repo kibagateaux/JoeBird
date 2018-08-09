@@ -24,7 +24,7 @@ var states = Object.freeze({
    ScoreScreen: 2
 });
 
-const flappyContractAddress = "0x8d91912c78dd4f4a788671f23351448753cd8d2c"
+const flappyContractAddress = "0xc9baf9e34e4b7bcac6b6e5fc3f53cc44dc0e29a0"
 const flappyContractAbi = [
   {
     "constant": true,
@@ -38,7 +38,21 @@ const flappyContractAbi = [
     "outputs": [
       {
         "name": "",
-        "type": "uint64"
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "price",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
       }
     ],
     "payable": false,
@@ -52,8 +66,8 @@ const flappyContractAbi = [
         "type": "bytes32"
       }
     ],
-    "payable": false,
-    "stateMutability": "nonpayable",
+    "payable": true,
+    "stateMutability": "payable",
     "type": "constructor"
   },
   {
@@ -63,50 +77,8 @@ const flappyContractAbi = [
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "playerAddress",
-        "type": "address"
-      },
-      {
-        "name": "playerScore",
-        "type": "uint64"
-      }
-    ],
-    "name": "checkScore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTopTen",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
     "inputs": [],
-    "name": "checkIfPaid",
+    "name": "AcceptEth",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -116,15 +88,11 @@ const flappyContractAbi = [
     "constant": false,
     "inputs": [
       {
-        "name": "playerAddress",
-        "type": "address"
-      },
-      {
-        "name": "playerScore",
-        "type": "uint64"
+        "name": "deposit",
+        "type": "uint256"
       }
     ],
-    "name": "checkHighScore",
+    "name": "sendPayment",
     "outputs": [],
     "payable": true,
     "stateMutability": "payable",
@@ -136,10 +104,89 @@ const flappyContractAbi = [
       {
         "name": "playerAddress",
         "type": "address"
+      }
+    ],
+    "name": "checkAlreadyPayed",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
       },
       {
         "name": "playerScore",
-        "type": "uint64"
+        "type": "uint256"
+      }
+    ],
+    "name": "addNewScore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "checkHighScore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
       }
     ],
     "name": "checkInTopTen",
@@ -161,15 +208,47 @@ const flappyContractAbi = [
     "constant": false,
     "inputs": [
       {
+        "name": "payee",
+        "type": "address"
+      }
+    ],
+    "name": "payAddress",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "getLeaderboard",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
         "name": "arr_",
-        "type": "uint64[]"
+        "type": "uint256[]"
       }
     ],
     "name": "sort_array",
     "outputs": [
       {
         "name": "",
-        "type": "uint64[]"
+        "type": "uint256[]"
       }
     ],
     "payable": false,
@@ -177,6 +256,9 @@ const flappyContractAbi = [
     "type": "function"
   }
 ];
+
+
+var web3 = window.web3;
 
 var currentstate;
 
@@ -214,11 +296,14 @@ $(document).ready(function() {
       debugmode = true;
    if(window.location.search == "?easy")
       pipeheight = 200;
-   
+
   function initWeb3() {
     if(typeof web3 !== "undefined"){
-      web3 = new Web3(Web3.currentProvider);
-      // window.web3 = web3;
+      console.log('initWeb3', web3);
+
+      web3 = new Web3(web3.currentProvider);
+      // web3 = web3;
+      console.log('web3 provide', web3.currentProvider);
     } else {
       web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
     }
@@ -295,8 +380,9 @@ function sendPayment()
     if(balance.c[0] < 0.1) {
       alert('Refill your wallet with cryptocoins to play more JoeBird');
     } else {
-      const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
-      console.log('flappy contract', flappyContract);
+      const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress);
+      const tx = flappyContract.sendPayment(web3.toWei(1, "ether"))
+      console.log('send payment', flappyContract, tx);
     }
   } else {
     initWeb3();
@@ -365,7 +451,7 @@ function gameloop() {
    var origwidth = 34.0;
    var origheight = 24.0;
    
-   var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90) * 8);
+   var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90));
    var boxheight = (origheight + box.height) / 2;
    var boxleft = ((box.width - boxwidth) / 2) + box.left;
    var boxtop = ((box.height - boxheight) / 2) + box.top;
@@ -404,8 +490,8 @@ function gameloop() {
    
    var pipetop = nextpipeupper.offset().top + nextpipeupper.height();
    var pipeleft = nextpipeupper.offset().left - 2; // for some reason it starts at the inner pipes offset, not the outer pipes.
-   var piperight = pipeleft + pipewidth;
-   var pipebottom = pipetop + pipeheight;
+   var piperight = pipeleft + pipewidth + 40;
+   var pipebottom = pipetop + pipeheight + 40;
    
    if(debugmode)
    {
@@ -565,8 +651,12 @@ function playerDead()
 
    // Insert web3 contract call to add `score` to leaderboard
    const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
-   flappyContract.addNewScore(web3.eth.defaultAccount, score)
+   const finalScoreTx = flappyContract.addNewScore(web3.eth.defaultAccount, score, {
+     from: web3.eth.defaultAccount, 
+     gas: 300000
+   })
 
+   console.log('final score', score, finalScoreTx);
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
    {
@@ -668,8 +758,8 @@ function updatePipes()
    //add a new pipe (top height + bottom height  + pipeheight == flyArea) and put it in our tracker
    var padding = 80;
    var constraint = flyArea - pipeheight - (padding * 2); //double padding (for top and bottom)
-   var topheight = Math.floor((Math.random()*constraint) + padding); //add lower padding
-   var bottomheight = (flyArea - pipeheight) - topheight;
+   var topheight = Math.floor((Math.random()*constraint) + padding)  + 40; //add lower padding
+   var bottomheight = (flyArea - pipeheight) - topheight - 40;
    var newpipe = $('<div class="pipe animated"><div class="pipe_upper" style="height: ' + topheight + 'px;"></div><div class="pipe_lower" style="height: ' + bottomheight + 'px;"></div></div>');
    $("#flyarea").append(newpipe);
    pipes.push(newpipe);
