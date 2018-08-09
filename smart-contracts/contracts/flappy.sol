@@ -66,21 +66,25 @@ contract Flappy {
     } 
 
     //only check the score of the address if it has been confirmed to pay to play the game
+<<<<<<< HEAD
     function checkIfPaid() {
+=======
+    function checkIfPaid() public{
+>>>>>>> bafbffa5a34f29cb05c66523e7f2c1318000dd80
         
     }
     
     function checkHighScore(address playerAddress, uint64 playerScore) public payable{
         if (playerScore > highScore) {
            //set old high score to new high score
-           highScore = playerScore;
-           //set address to pay winner
-           highScoreAddress = playerAddress;
-           //get current pot balance
-           uint256 currentBalance = address(this).balance;
-           payout = currentBalance/2;
-           //send eth
-           highScoreAddress.transfer(payout);
+            highScore = playerScore;
+            //set address to pay winner
+            highScoreAddress = playerAddress;
+            //get current pot balance
+            uint256 currentBalance = address(this).balance;
+            payout = currentBalance/2;
+            //send eth
+            highScoreAddress.transfer(payout);
         }
     }
     
