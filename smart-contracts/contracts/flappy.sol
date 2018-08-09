@@ -11,9 +11,10 @@ contract Flappy {
     uint private payout;
     uint64[] public topTen;
 
+    constructor() public {
+        owner = msg.sender;
+    }
 
-
-    
     function() payable public {
     }
     
@@ -35,16 +36,15 @@ contract Flappy {
     
 
 
-    function checkScore(address playerAddress, uint64 playerScore) public {
+    function checkScore(address playerAddress, uint64 playerScore) public returns (uint64) {
         //checks if score is in the top 10, adds it to top 10 if so
         checkInTopTen(playerAddress, playerScore);
         //checks if score is the highest, if so disburse give 50% of pot
         checkHighScore(playerAddress, playerScore);
         //pay 1% of pot to each address in top 10
         //payDividendsToTopTen();
+        return playerScore;
         
-
-
         
     }
     
@@ -53,7 +53,7 @@ contract Flappy {
     } 
 
     //only check the score of the address if it has been confirmed to pay to play the game
-    function checkIfPaid(){
+    function checkIfPaid() {
         
     }
     

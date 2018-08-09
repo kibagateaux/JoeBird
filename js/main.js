@@ -127,6 +127,7 @@ function startGame()
             // if account overdrawn we add a debt
             // if payment successful we
 
+
    currentstate = states.GameScreen;
    
    //fade out the splash
