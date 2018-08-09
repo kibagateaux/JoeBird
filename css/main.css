@@ -51,19 +51,19 @@
 
 @-webkit-keyframes animBird {
    from { background-position: 0px 0px; }
-   to { background-position: 0px -144px; }
+   to { background-position: 0px -324px; }
 }
 @-moz-keyframes animBird {
    from { background-position: 0px 0px; }
-   to { background-position: 0px -144px; }
+   to { background-position: 0px -324px; }
 }
 @-o-keyframes animBird {
    from { background-position: 0px 0px; }
-   to { background-position: 0px -144px; }
+   to { background-position: 0px -324px; }
 }
 @keyframes animBird {
    from { background-position: 0px 0px; }
-   to { background-position: 0px -144px; }
+   to { background-position: 0px -324px; }
 }
 
 @-webkit-keyframes animPipe {
@@ -311,8 +311,8 @@ Screen - Game
 .bird
 {
    position: absolute;
-   width: 32px;
-   height: 36px;
+   width: 53px;
+   height: 81px;
    background-image: url('../assets/bird.png');
    
    -webkit-animation: animBird 300ms steps(4) infinite;
