@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+// JETPACKJOE
 var debugmode = false;
 
 
@@ -23,6 +23,160 @@ var states = Object.freeze({
    GameScreen: 1,
    ScoreScreen: 2
 });
+
+const flappyContractAddress = "0x8d91912c78dd4f4a788671f23351448753cd8d2c"
+const flappyContractAbi = [
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "topTen",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint64"
+      }
+    ],
+    "name": "checkScore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTopTen",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "checkIfPaid",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint64"
+      }
+    ],
+    "name": "checkHighScore",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint64"
+      }
+    ],
+    "name": "checkInTopTen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "payDividendsToTopTen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "arr_",
+        "type": "uint64[]"
+      }
+    ],
+    "name": "sort_array",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
 
 var currentstate;
 
@@ -61,10 +215,17 @@ $(document).ready(function() {
    if(window.location.search == "?easy")
       pipeheight = 200;
    
-    if(!window.web3){
-      const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
-      window.web3 = web3;
+  function initWeb3() {
+    if(typeof web3 !== "undefined"){
+      web3 = new Web3(Web3.currentProvider);
+      // window.web3 = web3;
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
     }
+    web3.eth.defaultAccount = web3.eth.accounts[0]
+  }
+  
+  initWeb3();
 
    //get the highscore
    var savedscore = getCookie("highscore");
@@ -124,20 +285,35 @@ function showSplash()
    $("#splash").transition({ opacity: 1 }, 2000, 'ease');
 }
 
+function sendPayment()
+{
+  const web3 = window.web3;
+  if(web3) {
+    const account = web3.eth.accounts[0]
+    const balance = web3.fromWei(web3.eth.getBalance(account));
+   
+    if(balance.c[0] < 0.1) {
+      alert('Refill your wallet with cryptocoins to play more JoeBird');
+    } else {
+      const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
+      console.log('flappy contract', flappyContract);
+    }
+  } else {
+    initWeb3();
+    sendPayment();
+  }
+}
+
+
 function startGame()
 {
     // Initiate ETH payment to Loom channel contract
     // Play game immediately
     // On callback
-    // if account overdrawn we add a debt
-    // if payment successful we
-    const balance = web3.fromWei(web3.eth.getBalance(web3.eth.accounts[0]));
-   
-    if(balance.c[0] < 0.1) {
-      alert('Refill your wallet with cryptocoins to play more JoeBird');
-    }
-
-    console.log('start', window.web3, balance);
+      // if account overdrawn we add a debt and end game
+      // if payment successful continue game
+    const tx = sendPayment();
+    console.log('tx', tx);
 
 
    currentstate = states.GameScreen;
@@ -386,7 +562,10 @@ function playerDead()
    loopGameloop = null;
    loopPipeloop = null;
 
-   // Insert web3 contracr call to add `score` to leaderboard
+   // Insert web3 contract call to add `score` to leaderboard
+   const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
+   console.log('game end', flappyContract, score);
+   flappyContract.checkScore(web3.eth.defaultAccount, score)
 
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
