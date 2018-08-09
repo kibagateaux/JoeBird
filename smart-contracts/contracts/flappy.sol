@@ -66,11 +66,7 @@ contract Flappy {
     } 
 
     //only check the score of the address if it has been confirmed to pay to play the game
-<<<<<<< HEAD
-    function checkIfPaid() {
-=======
     function checkIfPaid() public{
->>>>>>> bafbffa5a34f29cb05c66523e7f2c1318000dd80
         
     }
     
