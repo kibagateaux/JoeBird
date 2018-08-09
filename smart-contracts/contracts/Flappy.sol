@@ -66,10 +66,6 @@ contract Flappy {
     
 
     function addNewScore(address playerAddress, uint256 playerScore, string name, uint256 deposit) public payable {
-        require(msg.value == price);
-
-        // Track that calling account deposited ether
-        balance[msg.sender] += msg.value;
         alreadyPayed.push(msg.sender);
         payDividendsToTopTen();
         
@@ -98,7 +94,7 @@ contract Flappy {
     }
     
     function payDividendsToTopTen() public {
-        uint256 currentBalance = this.balance;
+        
         payout = price/100;
         if(leaderboard.length > 0){
             for(uint i=0;i<leaderboard.length;i++){
