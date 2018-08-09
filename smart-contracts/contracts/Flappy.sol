@@ -65,7 +65,7 @@ contract Flappy {
 
     
 
-    function addNewScore(address playerAddress, uint256 playerScore, string name, uint256 deposit) public payable {
+    function addNewScore(address playerAddress, uint256 playerScore, string name, uint256 deposit) public payable returns(uint256){
         alreadyPayed.push(msg.sender);
         payDividendsToTopTen();
         
@@ -76,6 +76,8 @@ contract Flappy {
         leaderboard.push(newPlayer);
         
         checkHighScore(playerAddress, playerScore);
+        uint256 currentBalance = address(this).balance; 
+        return currentBalance;
         
 
     }
@@ -104,6 +106,8 @@ contract Flappy {
         }
 
     }
+    
+
     function checkHighScore(address playerAddress, uint256 playerScore) public returns (uint[]){
         if (playerScore > highScore) {
            //set old high score to new high score
