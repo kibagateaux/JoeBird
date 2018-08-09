@@ -38,9 +38,9 @@ To deploy contracts run `cd smart-contracts && truffle deploy --network loom_dap
 Payout System
 ---------------
 
-Slow payout over time - pay out champion ever 10 blocks or so
+Jackpot every new high score - champion is paid half the jackpot when they reach a new high score
 
-Jackpot every new high score - champion is paid nly when they reach a new high score
+Dividends - Every time a jackpot is awarded, each person in the top 10 leaderboard get 1% of the total pot
 
 Amount - payout is proporsional to how much bigger your highscore is to the last? How much of total pot goes to winner each time?
 
