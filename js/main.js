@@ -25,7 +25,7 @@ var states = Object.freeze({
    LeaderBoard: 3
 });
 
-const flappyContractAddress = "0x2a851510949d69fa916cf9fededbbce6babef1d7"
+const flappyContractAddress = "0xb0f778b0cb1341b60b8c4e5ccf67b83e91ce8bb8"
 const flappyContractAbi = [
   {
     "constant": true,
@@ -352,19 +352,27 @@ function submitNewHighscore () {
     // Insert web3 contract call to add `score` to leaderboard
    //on button press
 
-   sendPayment();
+  //  sendPayment();
    console.log('param', web3.eth.defaultAccount, score);
    const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
    const finalScoreTx = flappyContract.addNewScore(
-      web3.eth.defaultAccount,
+      "0x04819b19e75d0641678c58f6724058bf1c9a2cc3",
       score,
       "JETPACK JOE", // input username
-      100000000000000000000,
+      1000000000000000000,
       {
         from: "0x04819b19e75d0641678c58f6724058bf1c9a2cc3", 
-        gas: 3000000
+        gas: 3000000,
+        value: 1000000000000000000
       },
-      (a,b) => console.log('final score', a,b),
+      (a,b) => {
+        const balance = web3.fromWei(web3.eth.getBalance(flappyContractAddress,
+          (a,b) => b));
+        console.log('final score', balance)
+        // var elemscore = $("#totalpot");
+        // elemscore.empty();
+        // elemscore.append("<img src='assets/font_small_" + 1 + ".png' alt='" + 1 + "'>");
+      },
   )
   console.log('final score', score, finalScoreTx);
   return finalScoreTx;
@@ -430,11 +438,11 @@ function gameloop() {
    
    //create the bounding box
    var box = document.getElementById('player').getBoundingClientRect();
-   var origwidth = 34.0;
-   var origheight = 24.0;
+   var origwidth = 25.0;
+   var origheight = 50.0;
    
-   var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90));
-   var boxheight = (origheight + box.height) / 2;
+   var boxwidth = (origwidth - (Math.sin(Math.abs(rotation) / 90) * 8)) / 2;
+   var boxheight = (origheight + box.height) / 4;
    var boxleft = ((box.width - boxwidth) / 2) + box.left;
    var boxtop = ((box.height - boxheight) / 2) + box.top;
    var boxright = boxleft + boxwidth;

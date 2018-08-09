@@ -245,8 +245,8 @@ Screen - Game
    position: absolute;
    top: 100px;
    left: 400px;
-   width: 188px;
-   height: 170px;
+   width: 500px;
+   height: 500px;
    background-image: url('../assets/splash.png');
    background-repeat: no-repeat;
 }
@@ -290,6 +290,18 @@ Screen - Game
 {
    padding-left: 2px;
 }
+
+
+#totalpot
+{
+   position: absolute;
+   top: 147px;
+   left: 64px;
+   width: 104px;
+   height: 14px;
+   text-align: right;
+}
+
 
 #replay
 {
