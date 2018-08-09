@@ -366,14 +366,11 @@ function playerDead()
    loopGameloop = null;
    loopPipeloop = null;
 
-<<<<<<< HEAD
    // Insert web3 contract call to add `score` to leaderboard
    const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
    console.log('game end', flappyContract, score);
    flappyContract.checkScore(web3.eth.defaultAccount, score, {from: web3.eth.accounts[1], gas:3000000})
 
-=======
->>>>>>> 26466820e55156ff93b87c837d62026eb978f5a1
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
    {
