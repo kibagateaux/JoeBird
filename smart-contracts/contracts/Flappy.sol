@@ -100,7 +100,7 @@ contract Flappy {
     function payDividendsToTopTen() public {
         uint256 currentBalance = this.balance;
         payout = price/100;
-        if(topTen.length > 0){
+        if(leaderboard.length > 0){
             for(uint i=0;i<leaderboard.length;i++){
                 address recieverAddress = leaderboard[i].addr;
                 recieverAddress.transfer(payout);
