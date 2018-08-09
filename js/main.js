@@ -14,14 +14,251 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+// JETPACKJOE
 var debugmode = false;
+
 
 var states = Object.freeze({
    SplashScreen: 0,
    GameScreen: 1,
    ScoreScreen: 2
 });
+
+const flappyContractAddress = "0xc9baf9e34e4b7bcac6b6e5fc3f53cc44dc0e29a0"
+const flappyContractAbi = [
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "topTen",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "price",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "AcceptEth",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "deposit",
+        "type": "uint256"
+      }
+    ],
+    "name": "sendPayment",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "checkAlreadyPayed",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "getBalance",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "addNewScore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "checkHighScore",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "checkInTopTen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "payDividendsToTopTen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "payee",
+        "type": "address"
+      }
+    ],
+    "name": "payAddress",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "getLeaderboard",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "arr_",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "sort_array",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+
+var web3 = window.web3;
 
 var currentstate;
 
@@ -59,7 +296,22 @@ $(document).ready(function() {
       debugmode = true;
    if(window.location.search == "?easy")
       pipeheight = 200;
-   
+
+  function initWeb3() {
+    if(typeof web3 !== "undefined"){
+      console.log('initWeb3', web3);
+
+      web3 = new Web3(web3.currentProvider);
+      // web3 = web3;
+      console.log('web3 provide', web3.currentProvider);
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+    }
+    web3.eth.defaultAccount = web3.eth.accounts[0]
+  }
+  
+  initWeb3();
+
    //get the highscore
    var savedscore = getCookie("highscore");
    if(savedscore != "")
@@ -118,8 +370,38 @@ function showSplash()
    $("#splash").transition({ opacity: 1 }, 2000, 'ease');
 }
 
+function sendPayment()
+{
+  const web3 = window.web3;
+  if(web3) {
+    const account = web3.eth.accounts[0]
+    const balance = web3.fromWei(web3.eth.getBalance(account));
+   
+    if(balance.c[0] < 0.1) {
+      alert('Refill your wallet with cryptocoins to play more JoeBird');
+    } else {
+      const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress);
+      const tx = flappyContract.sendPayment(web3.toWei(1, "ether"))
+      console.log('send payment', flappyContract, tx);
+    }
+  } else {
+    initWeb3();
+    sendPayment();
+  }
+}
+
+
 function startGame()
 {
+    // Initiate ETH payment to Loom channel contract
+    // Play game immediately
+    // On callback
+      // if account overdrawn we add a debt and end game
+      // if payment successful continue game
+    const tx = sendPayment();
+    console.log('tx', tx);
+
+
    currentstate = states.GameScreen;
    
    //fade out the splash
@@ -166,11 +448,11 @@ function gameloop() {
    
    //create the bounding box
    var box = document.getElementById('player').getBoundingClientRect();
-   var origwidth = 53.0;
-   var origheight = 81.0;
+   var origwidth = 34.0;
+   var origheight = 24.0;
    
-   var boxwidth = (origwidth - (Math.sin(Math.abs(rotation) / 90) * 8))/2;
-   var boxheight = (origheight + box.height) / 4;
+   var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90));
+   var boxheight = (origheight + box.height) / 2;
    var boxleft = ((box.width - boxwidth) / 2) + box.left;
    var boxtop = ((box.height - boxheight) / 2) + box.top;
    var boxright = boxleft + boxwidth;
@@ -366,6 +648,15 @@ function playerDead()
    loopGameloop = null;
    loopPipeloop = null;
 
+
+   // Insert web3 contract call to add `score` to leaderboard
+   const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
+   const finalScoreTx = flappyContract.addNewScore(web3.eth.defaultAccount, score, {
+     from: web3.eth.defaultAccount, 
+     gas: 300000
+   })
+
+   console.log('final score', score, finalScoreTx);
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
    {
@@ -467,7 +758,7 @@ function updatePipes()
    //add a new pipe (top height + bottom height  + pipeheight == flyArea) and put it in our tracker
    var padding = 80;
    var constraint = flyArea - pipeheight - (padding * 2); //double padding (for top and bottom)
-   var topheight = Math.floor((Math.random()*constraint) + padding) + 40; //add lower padding
+   var topheight = Math.floor((Math.random()*constraint) + padding)  + 40; //add lower padding
    var bottomheight = (flyArea - pipeheight) - topheight - 40;
    var newpipe = $('<div class="pipe animated"><div class="pipe_upper" style="height: ' + topheight + 'px;"></div><div class="pipe_lower" style="height: ' + bottomheight + 'px;"></div></div>');
    $("#flyarea").append(newpipe);
