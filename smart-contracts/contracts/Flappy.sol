@@ -106,8 +106,8 @@ contract Flappy {
                 recieverAddress.transfer(payout);
             }
         }
-
     }
+    
     function checkHighScore(address playerAddress, uint256 playerScore) public returns (uint[]){
         if (playerScore > highScore) {
            //set old high score to new high score

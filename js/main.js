@@ -24,7 +24,7 @@ var states = Object.freeze({
    ScoreScreen: 2
 });
 
-const flappyContractAddress = "0xc9baf9e34e4b7bcac6b6e5fc3f53cc44dc0e29a0"
+const flappyContractAddress = "0x2a851510949d69fa916cf9fededbbce6babef1d7"
 const flappyContractAbi = [
   {
     "constant": true,
@@ -88,131 +88,23 @@ const flappyContractAbi = [
     "constant": false,
     "inputs": [
       {
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
         "name": "deposit",
         "type": "uint256"
       }
     ],
-    "name": "sendPayment",
-    "outputs": [],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "playerAddress",
-        "type": "address"
-      }
-    ],
-    "name": "checkAlreadyPayed",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "getBalance",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "playerAddress",
-        "type": "address"
-      },
-      {
-        "name": "playerScore",
-        "type": "uint256"
-      }
-    ],
     "name": "addNewScore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "playerAddress",
-        "type": "address"
-      },
-      {
-        "name": "playerScore",
-        "type": "uint256"
-      }
-    ],
-    "name": "checkHighScore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "playerAddress",
-        "type": "address"
-      },
-      {
-        "name": "playerScore",
-        "type": "uint256"
-      }
-    ],
-    "name": "checkInTopTen",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "payDividendsToTopTen",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "payee",
-        "type": "address"
-      }
-    ],
-    "name": "payAddress",
     "outputs": [],
     "payable": true,
     "stateMutability": "payable",
@@ -230,6 +122,10 @@ const flappyContractAbi = [
       {
         "name": "",
         "type": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "string[]"
       }
     ],
     "payable": false,
@@ -238,13 +134,26 @@ const flappyContractAbi = [
   },
   {
     "constant": false,
+    "inputs": [],
+    "name": "payDividendsToTopTen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
     "inputs": [
       {
-        "name": "arr_",
-        "type": "uint256[]"
+        "name": "playerAddress",
+        "type": "address"
+      },
+      {
+        "name": "playerScore",
+        "type": "uint256"
       }
     ],
-    "name": "sort_array",
+    "name": "checkHighScore",
     "outputs": [
       {
         "name": "",
@@ -300,14 +209,14 @@ $(document).ready(function() {
   function initWeb3() {
     if(typeof web3 !== "undefined"){
       console.log('initWeb3', web3);
-
-      web3 = new Web3(web3.currentProvider);
+     web3 = new Web3(web3.currentProvider);
       // web3 = web3;
       console.log('web3 provide', web3.currentProvider);
     } else {
-      web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+     web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
     }
-    web3.eth.defaultAccount = web3.eth.accounts[0]
+   web3.eth.defaultAccount = web3.eth.accounts[0]
+   return window.web3 = web3;
   }
   
   initWeb3();
@@ -372,17 +281,25 @@ function showSplash()
 
 function sendPayment()
 {
-  const web3 = window.web3;
+  console.log('send payment', web3, web3.currentProvider);
   if(web3) {
     const account = web3.eth.accounts[0]
-    const balance = web3.fromWei(web3.eth.getBalance(account));
+    const balance = web3.fromWei(web3.eth.getBalance(account, (a,b) => b))
    
-    if(balance.c[0] < 0.1) {
-      alert('Refill your wallet with cryptocoins to play more JoeBird');
+    console.log('balance', balance);
+    if(balance < 0.1) {
+      // alert('Refill your wallet with cryptocoins to play more JoeBird');
+      console.log('out of ETH!');
     } else {
       const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress);
-      const tx = flappyContract.sendPayment(web3.toWei(1, "ether"))
-      console.log('send payment', flappyContract, tx);
+      const tx = flappyContract.sendPayment(
+        web3.toWei(1, "ether"), 
+        // {
+        //   from: "0x04819b19e75d0641678c58f6724058bf1c9a2cc3",
+        //   gas: 300000
+        // },
+        (a, b) => console.log('callback', a, b)
+      )
     }
   } else {
     initWeb3();
@@ -390,6 +307,30 @@ function sendPayment()
   }
 }
 
+function submitNewHighscore () {
+    // popup leaderboard
+    // add event listener for submit button
+    // Insert web3 contract call to add `score` to leaderboard
+   //on button press
+
+   sendPayment();
+   console.log('param', web3.eth.defaultAccount, score);
+   const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
+   const finalScoreTx = flappyContract.addNewScore(
+      web3.eth.defaultAccount,
+      score,
+      "JETPACK JOE", // input username
+      100000000000000000000,
+      {
+        from: "0x04819b19e75d0641678c58f6724058bf1c9a2cc3", 
+        gas: 3000000
+      },
+      (a,b) => console.log('final score', a,b),
+  )
+  console.log('final score', score, finalScoreTx);
+  return finalScoreTx;
+
+}
 
 function startGame()
 {
@@ -398,8 +339,8 @@ function startGame()
     // On callback
       // if account overdrawn we add a debt and end game
       // if payment successful continue game
-    const tx = sendPayment();
-    console.log('tx', tx);
+    // const tx = sendPayment();
+
 
 
    currentstate = states.GameScreen;
@@ -648,15 +589,7 @@ function playerDead()
    loopGameloop = null;
    loopPipeloop = null;
 
-
-   // Insert web3 contract call to add `score` to leaderboard
-   const flappyContract = web3.eth.contract(flappyContractAbi).at(flappyContractAddress)
-   const finalScoreTx = flappyContract.addNewScore(web3.eth.defaultAccount, score, {
-     from: web3.eth.defaultAccount, 
-     gas: 300000
-   })
-
-   console.log('final score', score, finalScoreTx);
+   submitNewHighscore(score);
    //mobile browsers don't support buzz bindOnce event
    if(isIncompatible.any())
    {
