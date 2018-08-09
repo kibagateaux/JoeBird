@@ -139,6 +139,7 @@ function startGame()
 
     console.log('start', window.web3, balance);
 
+
    currentstate = states.GameScreen;
    
    //fade out the splash

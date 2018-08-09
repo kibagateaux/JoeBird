@@ -48,9 +48,6 @@ contract Flappy {
     //if the person just acheived the highscore, they instantly get half the pot
     //when this happens, 10% of the pot is split between the top 10 on the ranking board
 
-    
-
-
     function checkScore(address playerAddress, uint64 playerScore) public returns(uint) {
         //checks if score is in the top 10, adds it to top 10 if so
         checkInTopTen(playerAddress, playerScore);
@@ -69,7 +66,11 @@ contract Flappy {
     } 
 
     //only check the score of the address if it has been confirmed to pay to play the game
+<<<<<<< HEAD
+    function checkIfPaid() {
+=======
     function checkIfPaid() public{
+>>>>>>> bafbffa5a34f29cb05c66523e7f2c1318000dd80
         
     }
     
